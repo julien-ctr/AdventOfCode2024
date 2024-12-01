@@ -5,24 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advent of Code Results</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        table { border-collapse: collapse; width: 100%; }
+        body { font-family: Arial, sans-serif; background-color: skyblue;}
+        table { border-collapse: collapse; max-width: 80%; min-width: 40%;}
         th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #f4f4f4; }
+        th { background-color: #ddd; }
+        td { background-color: aliceblue; }
+        .container { display: flex; align-items: center; justify-content: center; }
+        h1, h2 {text-align: center; }
+        .star {color: rgb(219, 162, 4); }
+        .total { font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>Advent of Code Results</h1>
-    <table>
-        <tr>
-            <th>Day</th>
-            <th>Runtime (ms)</th>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>2</td>
-        </tr>
-        <!-- Add rows dynamically -->
-    </table>
+    <h1>Advent of Code 2024</h1>
+    <h2>Language : C++</h2>
+    <div class="container">
+        <table>
+            <tr>
+                <th>Day</th>
+                <th>Star 1</th>
+                <th>Star 2</th>
+                <th>Runtime (ms)</th>
+                <th>URL</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="star">★</td>
+                <td class="star">★</td>
+                <td>2</td>
+                <td><a href="https://github.com/julien-ctr/AdventOfCode2024/tree/main/day_01" target="_blank">[Code here]</a></td>
+            </tr>
+            <tr>
+                <td class="total">Total</td>
+                <td class="total star"></td>
+                <td class="total star">2★</td>
+                <td class="total">2</td>
+                <td class="total"></td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
