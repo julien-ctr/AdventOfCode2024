@@ -5,71 +5,57 @@
 #include <vector>
 #include <regex>
 #include <unordered_map>
-#include <algorithm>
 
 using namespace std;
 
-vector<pair<int, int>> processInput(vector<string> &fileContent) {
+pair<vector<int>, vector<int>> processInput(vector<string> &fileContent) {
     string pattern = R"(\b(\d+)\b\s+\b(\d+)\b)";
     regex regex(pattern);
-    vector<pair<int, int>> result;
+    pair<vector<int>, vector<int>> result;
 
     for (string line : fileContent) {
         auto begin = std::sregex_iterator(line.begin(), line.end(), regex);
         auto end = std::sregex_iterator();
         for (auto it = begin; it != end; ++it) {
             smatch match = *it;
-            pair<int, int> numbers = make_pair(stoi(match[1].str()), (stoi(match[2].str())));
-            result.push_back(numbers);
+            result.first.push_back(stoi(match[1].str()));
+            result.second.push_back(stoi(match[2].str()));
         }
     }
 
     return result;
 }
 
-void sortPairs(vector<pair<int, int>> &pairs) {
-    vector<int> firstList;
-    vector<int> secondList;
-
-    for (auto p : pairs) {
-        firstList.push_back(p.first);
-        secondList.push_back(p.second);
-    }
-
-    sort(firstList.begin(), firstList.end());
-    sort(secondList.begin(), secondList.end());
-
-    for (unsigned int i = 0; i < firstList.size(); i++) {
-        pairs[i] = make_pair(firstList[i], secondList[i]);
-    }
+void sortPairs(pair<vector<int>, vector<int>> &pairs) {
+    sort(pairs.first.begin(), pairs.first.end());
+    sort(pairs.second.begin(), pairs.second.end());
 }
 
-int sumDistances(vector<pair<int, int>> &pairs) {
+int sumDistances(pair<vector<int>, vector<int>> &pairs) {
     unsigned int sum = 0;
     
-    for (auto p : pairs) {
-        sum += abs(p.first - p.second);
+    for (unsigned int i = 0; i < pairs.first.size(); i++) {
+        sum += abs(pairs.first[i] - pairs.second[i]);
     }
 
     return sum;
 }
 
-int similarityScore(vector<pair<int, int>> &pairs) {
+int similarityScore(pair<vector<int>, vector<int>> &pairs) {
     unsigned int score = 0;
     unordered_map<int, int> counts;
 
     // Count all occurences of numbers on the right column
-    for (unsigned int i = 0; i < pairs.size(); i++) {
-        int rightElement = pairs[i].second;
-        if (counts.find(rightElement) != counts.end()) {
-            counts[rightElement]++;
+    for (int x : pairs.second) {
+        if (counts.find(x) != counts.end()) {
+            counts[x]++;
         } else {
-            counts[rightElement] = 1;
+            counts[x] = 1;
         }
     }
 
-    for (unsigned int i = 0; i < pairs.size(); i++) {
-        int leftElement = pairs[i].first;
+    for (unsigned int i = 0; i < pairs.first.size(); i++) {
+        int leftElement = pairs.first[i];
         score += leftElement * counts[leftElement];
     }
 
