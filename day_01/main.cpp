@@ -16,21 +16,21 @@ int main(){
     // similarityScore = O(n) + O(n) = O(2n)
     // Total : O(5n + 2.n.log(n)) ~ O(n.log(n))
 
+    auto text = loadFile("input.txt");
+
     auto start = std::chrono::steady_clock::now();
 
-    auto text = loadFile("input.txt");
     auto pairs = processInput(text);
     sortPairs(pairs);
     int firstStar = sumDistances(pairs);
     int secondStar = similarityScore(pairs); 
 
-    cout << "First star : " << firstStar << endl;
-    cout << "Second star : " << secondStar << endl;
-
     auto end = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    std::cout << "Time : " << elapsed.count() << "ms" << std::endl;
+    cout << "First star : " << firstStar << endl;
+    cout << "Second star : " << secondStar << endl;
+    cout << "Time : " << elapsed.count() << "ms" << std::endl;
 
     return 0;
 }
