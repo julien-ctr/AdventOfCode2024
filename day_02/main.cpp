@@ -8,13 +8,13 @@
 using namespace std;
 
 int main(){
-    // For an input of n lines :
+    // For an input of n lines, each containing k numbers :
     // loadFile = O(n)
     // processInput ~ O(n)
-    // sortPairs = 2.O(n.log(n))
-    // sumDistances = O(n)
-    // similarityScore = O(n) + O(n) = O(2n)
-    // Total : O(5n + 2.n.log(n)) ~ O(n.log(n))
+    // calculateDiffs ~ O(n.k)
+    // countValid ~ O(n.k)
+    // countValid2 ~ O(n.k²)
+    // Overall : O(n.k²)
 
     auto text = loadFile("input.txt");
 
