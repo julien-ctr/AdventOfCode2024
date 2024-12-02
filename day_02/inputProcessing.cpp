@@ -3,22 +3,16 @@
 using namespace std;
 
 vector<vector<int>> processInput(vector<string> &fileContent) {
-    string pattern = R"(\b(\d+)\b)";
-    regex regex(pattern);
     vector<vector<int>> result;
-
-    for (string line : fileContent) {
-        auto begin = std::sregex_iterator(line.begin(), line.end(), regex);
-        auto end = std::sregex_iterator();
-
+    for (const string &line : fileContent) {
+        istringstream iss(line);
         vector<int> v;
-        for (auto it = begin; it != end; ++it) {
-            smatch match = *it;
-            v.push_back(stoi(match.str()));
+        int num;
+        while (iss >> num) {
+            v.push_back(num);
         }
         result.push_back(v);
     }
-
     return result;
 }
 
@@ -35,31 +29,30 @@ vector<vector<int>> calculateDiffs(vector<vector<int>> &values) {
     return diffs;
 }
 
-bool isSafe(const vector<int> &diff) {
-    vector<int>::const_iterator minimum = min_element(diff.begin(), diff.end());
-    vector<int>::const_iterator maximum = max_element(diff.begin(), diff.end());
+bool isSafe(const vector<int> &level) {
+    vector<int> diff(level.size());
+    std::adjacent_difference(level.begin(), level.end(), diff.begin());
+
+    vector<int>::const_iterator minimum = min_element(diff.begin()+1, diff.end());
+    vector<int>::const_iterator maximum = max_element(diff.begin()+1, diff.end());
     return ((*maximum) * (*minimum) > 0 && (*maximum) <= 3 && (*minimum) >= -3);
 }
 
-bool isAlmostSafe(const vector<int> &level, const vector<int> &diff) {
+bool isAlmostSafe(const vector<int> &level) {
     for (unsigned int i = 0; i < level.size(); i++) {
         vector<int> newLevel = level;
         newLevel.erase(newLevel.begin() + i);
-
-        vector<int> tempDiff(newLevel.size());
-        adjacent_difference(newLevel.begin(), newLevel.end(), tempDiff.begin());
-        vector<int> newDiff(vector<int>(tempDiff.begin() + 1, tempDiff.end()));
         
-        if (isSafe(newDiff)) {
+        if (isSafe(newLevel)) {
             return true;
         }
     }
     return false;
 }
 
-unsigned int countValid1(vector<vector<int>> &diffs) {
+unsigned int countValid1(vector<vector<int>> &levels) {
     unsigned int score = 0;
-    for (const vector<int> &line : diffs) {
+    for (const vector<int> &line : levels) {
         if (isSafe(line)){
             score++;
         }
@@ -67,11 +60,11 @@ unsigned int countValid1(vector<vector<int>> &diffs) {
     return score;
 }
 
-unsigned int countValid2(vector<vector<int>> &levels, vector<vector<int>> &diffs) {
+unsigned int countValid2(vector<vector<int>> &levels) {
     unsigned int score = 0;
     unsigned int i = 0;
-    for (const vector<int> &line : diffs) {
-        if (isSafe(line) || isAlmostSafe(levels[i], line)) {
+    for (const vector<int> &line : levels) {
+        if (isSafe(line) || isAlmostSafe(line)) {
             score++;
         }
         i++;

@@ -18,19 +18,20 @@ int main(){
 
     auto text = loadFile("input.txt");
 
-    auto start = std::chrono::steady_clock::now();
+    auto start = chrono::high_resolution_clock::now();
 
     auto pairs = processInput(text);
     sortPairs(pairs);
     int firstStar = sumDistances(pairs);
     int secondStar = similarityScore(pairs); 
 
-    auto end = std::chrono::steady_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    auto end = chrono::high_resolution_clock::now();
+    auto elapsed = chrono::duration_cast<std::chrono::microseconds>(end - start);
+    double elapsed_ms = elapsed.count() / 1000.0;
 
     cout << "First star : " << firstStar << endl;
     cout << "Second star : " << secondStar << endl;
-    cout << "Time : " << elapsed.count() << "ms" << std::endl;
+    cout << "Time : " << elapsed_ms << "ms" << endl;
 
     return 0;
 }

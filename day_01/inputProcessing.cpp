@@ -3,20 +3,21 @@
 using namespace std;
 
 pair<vector<int>, vector<int>> processInput(vector<string> &fileContent) {
-    string pattern = R"(\b(\d+)\b\s+\b(\d+)\b)";
-    regex regex(pattern);
     pair<vector<int>, vector<int>> result;
-
     for (string line : fileContent) {
-        auto begin = std::sregex_iterator(line.begin(), line.end(), regex);
-        auto end = std::sregex_iterator();
-        for (auto it = begin; it != end; ++it) {
-            smatch match = *it;
-            result.first.push_back(stoi(match[1].str()));
-            result.second.push_back(stoi(match[2].str()));
-        }
-    }
+        istringstream iss(line);
+        vector<int> v;
 
+        int num;
+
+        iss >> num;
+        v.push_back(num);
+        result.first.push_back(num);
+
+        iss >> num;
+        v.push_back(num);
+        result.second.push_back(num);
+    }
     return result;
 }
 
