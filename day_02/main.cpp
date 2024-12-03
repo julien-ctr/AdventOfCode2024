@@ -11,7 +11,8 @@ int main(){
     // For an input of n lines, each containing k numbers :
     // loadFile = O(n)
     // processInput ~ O(n)
-    // calculateDiffs ~ O(n.k)
+    // isSafe ~ O(n)
+    // isAlmostSafe ~ O(n.k²)
     // countValid ~ O(n.k)
     // countValid2 ~ O(n.k²)
     // Overall : O(n.k²)

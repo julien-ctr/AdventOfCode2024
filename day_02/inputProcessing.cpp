@@ -16,19 +16,6 @@ vector<vector<int>> processInput(vector<string> &fileContent) {
     return result;
 }
 
-vector<vector<int>> calculateDiffs(vector<vector<int>> &values) {
-    vector<vector<int>> diffs;
-    diffs.reserve(values.size());
-
-    for (const vector<int> &v : values) {
-        vector<int> diff(v.size());
-        std::adjacent_difference(v.begin(), v.end(), diff.begin());
-        diffs.push_back(vector<int>(diff.begin() + 1, diff.end()));
-    }
-
-    return diffs;
-}
-
 bool isSafe(const vector<int> &level) {
     vector<int> diff(level.size());
     std::adjacent_difference(level.begin(), level.end(), diff.begin());
@@ -62,12 +49,10 @@ unsigned int countValid1(vector<vector<int>> &levels) {
 
 unsigned int countValid2(vector<vector<int>> &levels) {
     unsigned int score = 0;
-    unsigned int i = 0;
     for (const vector<int> &line : levels) {
         if (isSafe(line) || isAlmostSafe(line)) {
             score++;
         }
-        i++;
     }
     return score;
 }

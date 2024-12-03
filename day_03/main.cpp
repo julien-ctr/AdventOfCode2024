@@ -10,15 +10,15 @@ using namespace std;
 int main(){
     // For an input of n lines, each containing an average of m characters :
     // loadFile = O(n)
-    // processInput ~ O(n.m²)
+    // processInputStateMachine ~ O(n.m)  (O(n.m²) if using Regex version)
     // addMultiplications = O(n)
-    // Total : O(n.m²)
+    // Total : O(n.m)
 
     auto text = loadFile("input.txt");
 
     auto start = chrono::high_resolution_clock::now();
 
-    auto values = processInput(text);
+    auto values = processInputStateMachine(text);
 
     auto stars = addMultiplications(values);
     int firstStar = stars.first;

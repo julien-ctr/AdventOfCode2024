@@ -14,7 +14,6 @@ using namespace std;
 
 // Function declarations
 vector<vector<int>> processInput(vector<string> &fileContent);
-vector<vector<int>> calculateDiffs(vector<vector<int>> &values);
 bool isSafe(const vector<int> &level);
 bool isAlmostSafe(const vector<int> &level);
 unsigned int countValid1(vector<vector<int>> &levels);
