@@ -4,10 +4,10 @@ using namespace std;
 
 void loadData(const vector<string> &text, unordered_map<int, vector<int>> &map, vector<vector<int>> &v) {
     unsigned int line_num = 0;
-    string line = text[line_num];
-    while (line != "") {
+
+    while (!text[line_num].empty()) {
         int key, val;
-        istringstream lineStream(line);
+        istringstream lineStream(text[line_num]);
 
         lineStream >> key;
         lineStream.ignore(1, '|');
@@ -19,16 +19,14 @@ void loadData(const vector<string> &text, unordered_map<int, vector<int>> &map, 
             map[key] = {val};
         }
         line_num++;
-        line = text[line_num];
     } 
 
     line_num++;
-    line = text[line_num];
 
     while (line_num < text.size()) {
         vector<int> update;
         int num;
-        istringstream lineStream(line);
+        istringstream lineStream(text[line_num]);
         while (lineStream >> num) {
             update.push_back(num);
             lineStream.ignore(1, ',');
@@ -37,7 +35,6 @@ void loadData(const vector<string> &text, unordered_map<int, vector<int>> &map, 
         v.push_back(update);
 
         line_num++;
-        line = text[line_num];
     }
 }
 
