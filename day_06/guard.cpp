@@ -45,6 +45,72 @@ void Guard::move(const unordered_set<pair<int,int>> &map, unsigned int width, un
         i += direction.first;
         j += direction.second;
     }
+    direction = make_pair(direction.second, -direction.first);
+}
+
+void Guard::moveOptimized(unordered_map<int, vector<int>> &Xmap, unordered_map<int, vector<int>> &Ymap, unsigned int width, unsigned int height, bool log) {
+    int i = position.first;
+    int j = position.second;
+
+    int obstacle = -1;
+    if (log) {
+        cout << "Position : " << position.first << " ; " << position.second << endl;
+        cout << "Direction : " << direction.first << " ; " << direction.second << endl;
+    }
+
+    if (direction.second == 0) { // Vertical
+        auto it = std::lower_bound(Ymap[j].begin(), Ymap[j].end(), i);
+
+        if (log) {
+            cout << "Ymap " << j << " : ";
+            for (auto  val : Ymap[j]) {
+                cout << val << " ";
+            }
+            cout << endl;
+        }
+
+        if (it != Ymap[j].begin() && direction.first == -1) { // Up
+            --it;
+            obstacle = *it;
+            position.first = obstacle + 1;
+        } else if (it != Ymap[j].end() && direction.first == 1) { // Down
+            obstacle = *it;
+            position.first = obstacle - 1;
+        }
+    } else { // Horizontal
+        auto it = std::lower_bound(Xmap[i].begin(), Xmap[i].end(), j);
+
+        if (log) {
+            cout << "Xmap " << i << " : ";
+            for (auto  val : Xmap[i]) {
+                cout << val << " ";
+            }
+            cout << endl;
+        }
+
+        if (it != Xmap[i].begin() && direction.second == -1) { // Left
+            --it;
+            obstacle = *it;
+            position.second = obstacle + 1;
+        } else if (it != Xmap[i].end() && direction.second == 1) { // Right
+            obstacle = *it;
+            position.second = obstacle - 1;
+        }
+    }
+    
+    if (obstacle > -1 && obstacle < width && obstacle < height) { // If obstacle found
+        if (log) cout << "OBSTACLE FOUND" << endl;
+        PositionDirection posDir = {position, direction};
+        if (!visited.contains(posDir)) {
+            visited.insert(posDir);
+        } else {
+            if (log) cout << "LOOP DETECTED" << endl;
+            state = IN_CYCLE;
+        }
+    } else {
+        if (log) cout << "NOW OUT OF BOUNDS" << endl;
+        state = OUT_OF_BOUNDS;
+    }
 
     direction = make_pair(direction.second, -direction.first);
 }

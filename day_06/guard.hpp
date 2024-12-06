@@ -2,6 +2,8 @@
 #include <utility>
 #include <iostream>
 #include <unordered_set>
+#include <unordered_map>
+#include <vector>
 #include <fstream>
 #include "common.hpp"
 
@@ -25,6 +27,7 @@ class Guard {
         Guard(); // Default
         Guard(int i, int j); // Constructor
         void move(const unordered_set<pair<int,int>> &map, unsigned int width, unsigned int height);
+        void moveOptimized(unordered_map<int, vector<int>> &Xmap, unordered_map<int, vector<int>> &Ymap, unsigned int width, unsigned int height, bool log = false);
         void resetPos();
         bool hasVisited(int i, int j);
 

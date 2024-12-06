@@ -15,5 +15,6 @@
 using namespace std;
 
 // Function declarations
-void loadData(const vector<string> &text, unordered_set<pair<int, int>> &map, Guard &guard);
+void loadData(const vector<string> &text, unordered_set<pair<int, int>> &map, unordered_map<int, vector<int>> &obstacleXMap, unordered_map<int, vector<int>> &obstacleYMap, Guard &guard);
+void sortObstacleMaps(unordered_map<int, vector<int>>& obstacleXMap, unordered_map<int, vector<int>>& obstacleYMap);
 pair<int, int> countStars(const vector<string> &text);
