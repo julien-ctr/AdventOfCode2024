@@ -77,11 +77,11 @@ pair<int, int> countStars(const vector<string> &text) {
         }
 
         obstacleXMap[posDir.position.first].erase(find(obstacleXMap[posDir.position.first].begin(), 
-                                                  obstacleXMap[posDir.position.first].end(),
-                                                  posDir.position.second));
+                                                       obstacleXMap[posDir.position.first].end(),
+                                                       posDir.position.second));
         obstacleYMap[posDir.position.second].erase(find(obstacleYMap[posDir.position.second].begin(), 
-                                                  obstacleYMap[posDir.position.second].end(),
-                                                  posDir.position.first));;
+                                                        obstacleYMap[posDir.position.second].end(),
+                                                        posDir.position.first));;
     }
 
     return stars;

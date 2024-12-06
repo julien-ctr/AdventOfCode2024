@@ -9,8 +9,8 @@
 using namespace std;
 
 int main(){
-    // For an input of n rules, and m updates :
-    // loadFile = O(n) + O(m)
+    // For a map of size n :
+    // loadFile = O(n²)
 
     auto text = loadFile("input.txt");
     
