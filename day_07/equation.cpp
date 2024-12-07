@@ -50,11 +50,55 @@ bool recSolve(vector<int64_t> &numbers, unsigned int idx, int64_t currentResult,
     }  
 
     return false;
+}
+
+bool endsWith(int64_t x, int64_t y) {
+    if (y == 0) return x == 0;
+
+    int numDigits = log10(y) + 1;
+
+    int64_t divisor = pow(10, numDigits);
+
+    return x % divisor == y;
+}
+
+int64_t cut(int64_t x, int64_t y) {
+    int numDigits = log10(y) + 1;
+    return x / (pow(10, numDigits));
+}
+
+bool recSolveBack(vector<int64_t> &numbers, unsigned int idx, int64_t currentResult, int64_t target, bool canConcat) {
+    if (idx == 0) {
+        return currentResult == numbers[0];
+    }
+
+    if (currentResult < target) {
+        return false;
+    }   
+
+    if (currentResult % numbers[idx] == 0) {
+        if (recSolveBack(numbers, idx - 1, currentResult / numbers[idx], target, canConcat)) {
+            return true;
+        }
+    }
+
+    if (canConcat && endsWith(currentResult, numbers[idx])) {
+        if (recSolveBack(numbers, idx - 1, cut(currentResult, numbers[idx]), target, canConcat)) {
+            return true;
+        }
+    }  
+
+    if (recSolveBack(numbers, idx - 1, currentResult - numbers[idx], target, canConcat)) {
+        return true;
+    } 
+
+    return false;
 
 }
 
 bool Equation::solvable(bool concat) {
-    return concat ? recSolve(numbers, 1, numbers[0], result, true) : recSolve(numbers, 1, numbers[0], result, false);
+    // return concat ? recSolve(numbers, 1, numbers[0], result, true) : recSolve(numbers, 1, numbers[0], result, false);
+    return concat ? recSolveBack(numbers, numbers.size()-1, result, 0, true) : recSolveBack(numbers, numbers.size()-1, result, 0, false);
 }
 
 int64_t Equation::getResult() const {
