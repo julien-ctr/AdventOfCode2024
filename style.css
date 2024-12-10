@@ -57,10 +57,15 @@ tr:last-child > td:last-child {
 }
 
 h1,
-h2 {
+h2,
+h3 {
     text-align: center;
     font-family: 'Do Hyeon';
     font-weight: 300;
+}
+
+h3 {
+    margin: 1rem 0;
 }
 
 .star {
@@ -76,6 +81,7 @@ h2 {
     height: 100%;
     
     display: flex;
+    flex-direction: column;
     justify-content: center;
     justify-items: center;
     text-align: center;
