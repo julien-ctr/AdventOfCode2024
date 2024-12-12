@@ -28,11 +28,11 @@ td {
     background-color: aliceblue;
 }
 
-th:first-child {
+tr:first-child th:first-child {
     border-radius: 10px 0 0 0;
 }
 
-th:last-child {
+tr:first-child th:last-child {
     border-radius: 0 10px 0 0;
 }
 
