@@ -18,84 +18,32 @@ To get the number of edges :
         It is also an inner angle, because S & E are from the region, but (2,2) isn't.
 */
 
-unsigned int countInnerAngles(const vector<string>& map, Region& region, pair<unsigned int, unsigned int> pos) {
+void countEdges(const vector<string>& map, Region& region) {
     unsigned int count = 0;
-    unsigned int row = pos.first, col = pos.second;
 
-    bool leftEdge = col == 0;
-    bool rightEdge = col == map[0].size() - 1;
-    bool topEdge = row == 0;
-    bool botEdge = row == map.size() - 1;
+    for (const auto &[row, col] : region.visited) {
+        bool topIsSameRegion = region.visited.contains(make_pair(row-1, col));
+        bool botIsSameRegion = region.visited.contains(make_pair(row+1, col));
+        bool leftIsSameRegion = region.visited.contains(make_pair(row, col-1));
+        bool rightIsSameRegion = region.visited.contains(make_pair(row, col+1));
 
-    bool topIsSameRegion = topEdge ? false : region.visited.contains(make_pair(row-1, col));
-    bool botIsSameRegion = botEdge ? false : region.visited.contains(make_pair(row+1, col));
-    bool leftIsSameRegion = leftEdge ? false : region.visited.contains(make_pair(row, col-1));
-    bool rightIsSameRegion = rightEdge ? false : region.visited.contains(make_pair(row, col+1));
-
-    // N+W 
-    if ((!topEdge && !leftEdge) // If not on the top nor left border
-        && (leftIsSameRegion && topIsSameRegion && !region.visited.contains(make_pair(row-1, col-1)))) {
+        // Inner angles
+        if ((!leftIsSameRegion && !topIsSameRegion)  || // NW
+            (!leftIsSameRegion && !botIsSameRegion)  || // SW
+            (!rightIsSameRegion && !botIsSameRegion) || // SE
+            (!rightIsSameRegion && !topIsSameRegion)) { // NE
             ++count;
+        }
+
+        // Outer angles
+        if ((leftIsSameRegion && topIsSameRegion && !region.visited.contains(make_pair(row-1, col-1)))  || //NW
+            (leftIsSameRegion && botIsSameRegion && !region.visited.contains(make_pair(row+1, col-1)))  || //SW
+            (rightIsSameRegion && botIsSameRegion && !region.visited.contains(make_pair(row+1, col+1))) || //SE
+            (rightIsSameRegion && topIsSameRegion && !region.visited.contains(make_pair(row-1, col+1)))) { //NE
+            ++count;
+        }
     }
-
-    // S+W 
-    if ((!botEdge && !leftEdge) // If not on the bot nor left border
-        && (leftIsSameRegion && botIsSameRegion && !region.visited.contains(make_pair(row+1, col-1)))) {
-        ++count;
-    }
-
-    // S+E
-    if ((!botEdge && !rightEdge) // If not on the bot nor right border
-        && (rightIsSameRegion && botIsSameRegion && !region.visited.contains(make_pair(row+1, col+1)))) {
-        ++count;
-    }
-
-    // N+E 
-    if ((!topEdge && !rightEdge) // If not on the top nor right border
-        && (rightIsSameRegion && topIsSameRegion && !region.visited.contains(make_pair(row-1, col+1)))) {
-        ++count;
-    }
-
-
-    return count;
-}
-
-unsigned int countOuterAngles(const vector<string>& map, Region& region, pair<unsigned int, unsigned int> pos) {
-    unsigned int count = 0;
-    unsigned int row = pos.first, col = pos.second;
-
-    bool leftEdge = col == 0;
-    bool rightEdge = col == map[0].size() - 1;
-    bool topEdge = row == 0;
-    bool botEdge = row == map.size() - 1;
-
-
-    bool topIsSameRegion = topEdge ? false : region.visited.contains(make_pair(row-1, col));
-    bool botIsSameRegion = botEdge ? false : region.visited.contains(make_pair(row+1, col));
-    bool leftIsSameRegion = leftEdge ? false : region.visited.contains(make_pair(row, col-1));
-    bool rightIsSameRegion = rightEdge ? false : region.visited.contains(make_pair(row, col+1));
-
-    // N+W 
-    if (!leftIsSameRegion && !topIsSameRegion) {
-        ++count;
-    }
-
-    // S+W 
-    if (!leftIsSameRegion && !botIsSameRegion) {
-        ++count;
-    }
-
-    // S+E
-    if (!rightIsSameRegion && !botIsSameRegion) {
-        ++count;
-    }
-
-    // N+E 
-    if (!rightIsSameRegion && !topIsSameRegion) {
-        ++count;
-    }
-
-    return count;
+    region.edges = count;
 }
 
 void calculateRegions(const vector<string>& map, unordered_map<char, vector<Region>>& regions) {
@@ -140,15 +88,9 @@ void calculateRegions(const vector<string>& map, unordered_map<char, vector<Regi
         }
     }
 
-    // Count the edges 
     for (auto &[key, val] : regions) {
         for (Region &region : val) {
-            for (const auto &[row, col] : region.visited) {
-                region.innerAngles += countInnerAngles(map, region, make_pair(row, col));
-                region.outerAngles += countOuterAngles(map, region, make_pair(row, col));
-            }
-
-            region.edges = region.innerAngles + region.outerAngles;
+            countEdges(map, region);
         }
     }
 }
