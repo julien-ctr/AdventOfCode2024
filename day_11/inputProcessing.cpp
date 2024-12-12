@@ -5,7 +5,6 @@ using namespace std;
 void parseData(const vector<string> &text, unordered_map<uint64_t, uint64_t> &stoneList) {
     istringstream iss(text[0]);
     uint64_t num;
-    cout << "Raw data : " << text[0] << endl;
 
     while (iss >> num) {
         stoneList[num]++;
