@@ -4,6 +4,18 @@ string keyFromPos(complex<int64_t> pos) {
     return to_string(pos.real()) + "_" + to_string(pos.imag());
 }
 
+complex<int64_t> posFromKey(string key) {
+    std::stringstream sstream(key);
+    int realPart, imagPart;
+    char delimiter;
+
+    // Extract real and imaginary parts separated by '_'
+    sstream >> realPart >> delimiter >> imagPart;
+
+    // Return the complex number
+    return complex<int64_t>(realPart, imagPart);
+}
+
 
 void Map::moveRobots(int64_t factor) {
     for (Robot &r : robots) {
@@ -91,46 +103,51 @@ double Map::highestRobotDensity(unsigned int windowWidth, unsigned int windowHei
     return maxDensity;
 };
 
-uint64_t Map::findLargestGroup(const Map &myMap) {
+uint64_t Map::findLargestGroup(unsigned int threshold) {
     /*
     Performs a BFS to find all the contiguous groups of robots and get their size.
     Returns the highest size found.
     */
 
-    vector<vector<bool>> visited(myMap.height, vector<bool>(myMap.width, false));
-    const vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    vector<vector<bool>> visited(height, vector<bool>(width, false));
+    const vector<pair<int, int>> directions = {{1, 0}, {-1, 0}};
     uint64_t maxSize = 0;
-    for (unsigned int row = 0; row < myMap.height; ++row) {
-        for (unsigned int col = 0; col < myMap.width; ++col) {
-            if (visited[row][col]) continue;
-            if (!myMap.robotsPerCell.contains(keyFromPos({row, col}))) continue; // No search if empty spot
+   
+    for (const auto &[key, val] : robotsPerCell) {
+        complex<int64_t> pos = posFromKey(key);
+        uint64_t col = pos.real();
+        uint64_t row = pos.imag();
 
-            visited[row][col] = true;
+        if (visited[row][col]) continue;
 
-            queue<pair<int, int>> q;
-            q.push({row, col});
-            uint64_t currentSize = 1;
+        visited[row][col] = true;
 
-            while (!q.empty()) {
-                auto [currentRow, currentCol] = q.front();
-                q.pop();
+        queue<pair<int, int>> q;
+        q.push({row, col});
+        uint64_t currentSize = 1;
 
-                for (const auto &direction : directions) {
-                    unsigned int newRow = currentRow + direction.first;
-                    unsigned int newCol = currentCol + direction.second;
+        while (!q.empty()) {
+            auto [currentRow, currentCol] = q.front();
+            q.pop();
 
-                    if (newRow < 0 || newRow >= myMap.height || newCol < 0 || newCol >= myMap.width) {
-                        continue;
-                    } else if (!visited[newRow][newCol] && myMap.robotsPerCell.contains(keyFromPos({newRow, newCol}))) {
-                        ++currentSize;
-                        visited[newRow][newCol] = true;
-                        q.push({newRow, newCol});
-                    }
+            for (const auto &direction : directions) {
+                unsigned int newRow = currentRow + direction.second;
+                unsigned int newCol = currentCol + direction.first;
+
+                if (newRow < 0 || newRow >= height || newCol < 0 || newCol >= width) {
+                    continue;
+                } else if (!visited[newRow][newCol] && robotsPerCell.contains(keyFromPos({newRow, newCol}))) {
+                    ++currentSize;
+                    visited[newRow][newCol] = true;
+                    q.push({newRow, newCol});
                 }
             }
-            if (currentSize > maxSize) {
-                maxSize = currentSize;
-            }
+        }
+        if (currentSize > maxSize) {
+            maxSize = currentSize;
+        }
+        if (maxSize >= threshold) {
+            return maxSize;
         }
     }
 

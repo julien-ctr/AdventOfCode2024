@@ -31,7 +31,7 @@ struct Map {
 
     double highestRobotDensity(unsigned int windowWidth, unsigned int windowHeight);
 
-    uint64_t findLargestGroup(const Map &myMap);
+    uint64_t findLargestGroup(unsigned int threshold);
 };
 
 string keyFromPos(complex<int64_t> pos);

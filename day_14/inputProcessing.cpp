@@ -61,8 +61,8 @@ pair<uint64_t, uint64_t> countStars(const vector<string> &text) {
     /*---------------------------------------------------------------------------------------*/
 
     
-    unsigned int estimatedTreeSize = 25;
-    while (myMap.findLargestGroup(myMap) < estimatedTreeSize) {
+    unsigned int estimatedTreeSize = 8;
+    while (myMap.findLargestGroup(estimatedTreeSize) < estimatedTreeSize) {
         myMap.moveRobots(1);
         ++secCount;
     }
