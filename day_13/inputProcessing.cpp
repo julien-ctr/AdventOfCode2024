@@ -58,20 +58,8 @@ void loadData(const vector<string> &text, vector<Equation> &equations) {
 
 void scaleEquations(vector<Equation> &equations, const int64_t factor) {
     for (Equation &eq : equations) {
-        eq.xf += factor;
-        eq.yf += factor;
+        eq.scale(factor);
     }
-}
-
-pair<int64_t, int64_t> solveEquation(const Equation &eq) {
-    // Returns {-1, -1} if no solution is found.
-
-    int64_t a = (eq.yf * eq.x2 - eq.y2 * eq.xf) / (eq.y1 * eq.x2 - eq.x1 * eq.y2);
-    int64_t b = (eq.xf - a * eq.x1) / eq.x2;
-
-    bool isValidSolution = a*eq.x1 + b*eq.x2 == eq.xf && a*eq.y1 + b*eq.y2 == eq.yf && a >= 0 && b >= 0;
-
-    return (isValidSolution ? make_pair(a,b) : make_pair((int64_t) -1, (int64_t) -1));
 }
 
 pair<uint64_t, uint64_t> countStars(const vector<string> &text) {
@@ -81,14 +69,14 @@ pair<uint64_t, uint64_t> countStars(const vector<string> &text) {
     loadData(text, equations);
 
     for (const Equation &eq : equations) {
-        pair<int64_t, int64_t> res = solveEquation(eq);
+        pair<int64_t, int64_t> res = eq.solve();
         if (res.first != -1) stars.first += 3 * res.first + res.second;
     }
 
     scaleEquations(equations, 10000000000000);
 
     for (const Equation &eq : equations) {
-        pair<int64_t, int64_t> res = solveEquation(eq);
+        pair<int64_t, int64_t> res = eq.solve();
         if (res.first != -1) stars.second += 3 * res.first + res.second;
     }
 
