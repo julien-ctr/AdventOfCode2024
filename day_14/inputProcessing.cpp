@@ -59,14 +59,19 @@ pair<uint64_t, uint64_t> countStars(const vector<string> &text) {
     //     }
     // }
     /*---------------------------------------------------------------------------------------*/
-
     
-    unsigned int estimatedTreeSize = 8;
-    while (myMap.findLargestGroup(estimatedTreeSize) < estimatedTreeSize) {
-        myMap.moveRobots(1);
-        ++secCount;
-    }
+    /*---------------------------------------------------------------------------------------*/
+    /* BELOW : Second solution, finding a row of at least N robots and hope that it is the tree */
+    // unsigned int estimatedTreeSize = 8;
+    // while (myMap.findLargestGroup(estimatedTreeSize) < estimatedTreeSize) {
+    //     myMap.moveRobots(1);
+    //     ++secCount;
+    // }
 
-    stars.second = secCount;
+    // stars.second = secCount;
+    /*---------------------------------------------------------------------------------------*/
+
+    stars.second = myMap.findTree();
+
     return stars;
 }

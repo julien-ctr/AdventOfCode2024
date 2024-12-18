@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 #include <queue>
+#include <algorithm>
+#include <numeric>
 
 using namespace std;
 
@@ -31,7 +33,14 @@ struct Map {
 
     double highestRobotDensity(unsigned int windowWidth, unsigned int windowHeight);
 
+    double varX();
+    double varY();
+
     uint64_t findLargestGroup(unsigned int threshold);
+
+    uint64_t findTree();
+
+    pair<int, int> getMinVariance(int k);
 };
 
 string keyFromPos(complex<int64_t> pos);
