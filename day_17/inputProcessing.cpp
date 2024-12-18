@@ -42,7 +42,6 @@ pair<string, uint64_t> countStars(const vector<string> &text) {
     
     loadData(text, prog);
 
-    Program cpy = prog;
     prog.processAllInstructions();
 
     stars.first = to_string(prog.out[0]);
