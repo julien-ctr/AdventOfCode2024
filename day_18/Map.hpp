@@ -31,8 +31,8 @@ struct Map {
         Heuristic(const pair<int, int> &startRef, const pair<int, int> &endRef) : start(startRef), end(endRef) {};
 
         bool operator()(const Path &a, const Path &b) {
-            double h1 = a.score + abs(a.currentPos.first - end.first) + abs(a.currentPos.second - end.second);
-            double h2 = b.score + abs(b.currentPos.first - end.first) + abs(b.currentPos.second - end.second);
+            int h1 = a.score + abs(a.currentPos.first - end.first) + abs(a.currentPos.second - end.second);
+            int h2 = b.score + abs(b.currentPos.first - end.first) + abs(b.currentPos.second - end.second);
             return h1 > h2;
         }
     };

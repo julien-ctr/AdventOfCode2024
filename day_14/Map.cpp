@@ -153,3 +153,80 @@ uint64_t Map::findLargestGroup(unsigned int threshold) {
 
     return maxSize;
 }
+
+double Map::varX() {
+    const unsigned int size = robots.size();
+
+    vector<double> x_values(robots.size());
+    transform(robots.begin(), robots.end(), x_values.begin(),
+              [](const Robot& robot) { return robot.pos.real(); });
+    const double mean = accumulate(x_values.begin(), x_values.end(), 0.0) / size;
+    
+
+
+    auto varianceFunc = [&mean, &size](double accumulator, const double &val) {
+        return accumulator + ((val - mean)*(val - mean) / (size - 1));
+    };
+
+    return accumulate(x_values.begin(), x_values.end(), 0.0, varianceFunc);
+} 
+
+double Map::varY() {
+    const unsigned int size = robots.size();
+
+    vector<double> y_values(robots.size());
+    transform(robots.begin(), robots.end(), y_values.begin(),
+              [](const Robot& robot) { return robot.pos.imag(); });
+    const double mean = accumulate(y_values.begin(), y_values.end(), 0.0) / size;
+    
+
+
+    auto varianceFunc = [&mean, &size](double accumulator, const double &val) {
+        return accumulator + ((val - mean)*(val - mean) / (size - 1));
+    };
+
+    return accumulate(y_values.begin(), y_values.end(), 0.0, varianceFunc);
+}
+
+pair<int, int> Map::getMinVariance(int k) {
+    pair<int, int> result(0,0);
+
+    double minVarX = -1;
+    double minVarY = -1;
+    for (unsigned int n = 1; n <= k; ++n) {
+        moveRobots(1);
+        double vx = varX();
+        double vy = varY();
+
+        if (vx < minVarX || minVarX == -1) {
+            // cout << "New X Variance minimum found at move n = " << n << " : " << vx << endl;
+            // log("minX.txt"); 
+            minVarX = vx;
+            result.first = n;
+        }
+
+        if (vy < minVarY || minVarY == -1) {
+            // cout << "New Y Variance minimum found at move n = " << n << " : " << vy << endl;
+            // log("minY.txt"); 
+            minVarY = vy;
+            result.second = n;
+        }
+    }
+    
+    moveRobots(-k);
+
+    return result;
+}
+
+uint64_t Map::findTree() {
+    unsigned int maxDimension = width > height ? width : height;
+    pair<int, int> optimalPositions = getMinVariance(maxDimension);
+    int optimalX = optimalPositions.first;
+    int optimalY = optimalPositions.second;
+
+    for (unsigned int t = 0; t < height * width; ++t) {
+        if (t % height == optimalY && t % width == optimalX) return t;
+    }
+
+    return -1;
+}
