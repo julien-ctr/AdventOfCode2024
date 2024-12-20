@@ -42,6 +42,7 @@ void Map::labelPath() {
     paths.push(Path(start)); 
 
     unordered_set<pair<int, int>, pairHash> visited;
+    visited.reserve(path.size());
 
     const vector<pair<int, int>> directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
@@ -54,8 +55,7 @@ void Map::labelPath() {
 
         if (currentPath.currentPos == end) return;
 
-        for (int i = 0; i < directions.size(); ++i) {
-            const auto &dir = directions[i];
+        for (const auto &dir : directions) {
             pair<int, int> newPos = currentPath.currentPos + dir;
 
             if (!isWall[newPos.second * width + newPos.first] && !visited.contains(newPos)) {
@@ -69,30 +69,49 @@ void Map::labelPath() {
 }
 
 pair<int64_t, int64_t> Map::countShortcuts(const pair<int64_t, int64_t> allowedCheats, const int64_t k) {
-    pair<int64_t, int64_t> count = {0,0};
-    
+    /*
+    I can't find a way to optimize this problem further.
+    Parallelization would obviously make it faster, but that's not really an algorithmic optimization.
+    I tried using a BFS starting from each point of the initial path, but is only happened to be at best 
+    a little slower than the version I currently have.
+    Currently, for n being the number of tiles in the initial path, this method runs n(n+1)/2 iterations of the inner for loop,
+    each having :
+        An access to path[j] in O(1)
+        Comparisons in O(1)
+        Sums and differences in O(1)
+    Therefore, the total time complexity is O(n^2).
+
+    To optimize further, another algorithm should be implemented.
+    */
+
+    int64_t countFirst = 0;
+    int64_t countSecond = 0;
+
     for (unsigned int i = 0; i < path.size(); ++i) {
         pair<int, int> pos = path[i];
         for (unsigned int j = i + 1; j < path.size(); ++j) {
             pair<int, int> pos2 = path[j];
-            pair<int, int> diff = pos2 - pos;
-            int manhattanDistance = abs(diff.first) + abs(diff.second);
+
+            // Early exit if one dimension is already over the authorized cheat
+            if (abs(pos2.first - pos.first) > allowedCheats.second || abs(pos2.second - pos.second) > allowedCheats.second) continue;
+
+
+            int manhattanDistance = abs(pos2.first - pos.first) + abs(pos2.second - pos.second);
 
             if (manhattanDistance > allowedCheats.second) continue;
 
             int64_t gain = abs(labels[pos2] - labels[pos]) - manhattanDistance;
             if (gain >= k) {
                 if (manhattanDistance <= allowedCheats.first) {
-                    ++count.first;
+                    ++countFirst;
                 }
-                ++count.second; 
+                ++countSecond; 
             }   
         }
     }
 
-    return count;
+    return {countFirst, countSecond};
 }
-
 
 void Map::log() {
     cout << endl;
