@@ -8,7 +8,8 @@
 #include <string>
 #include <iostream>
 #include <queue>
-#include <chrono>
+#include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -47,6 +48,8 @@ struct Map {
     void init(const vector<string> &text);
 
     void labelPath();
+
+    bool isValidPosition(const pair<int, int> &pos);
 
     pair<int64_t, int64_t> countShortcuts(pair<int64_t, int64_t> allowedCheat, int64_t k);
 
