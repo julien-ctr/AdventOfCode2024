@@ -23,23 +23,23 @@ string NumPad::getSequence(const char from, const char to) {
 
     if (dx < 0) {
         if (start.first == 3 && target.second == 0) {
-            moves += std::string(abs(dy), (dy > 0 ? 'v' : '^'));
-            moves += std::string(-dx, '<');
+            moves += string(abs(dy), (dy > 0 ? 'v' : '^'));
+            moves += string(-dx, '<');
         } else {
-            moves += std::string(-dx, '<');
-            moves += std::string(abs(dy), (dy > 0 ? 'v' : '^'));
+            moves += string(-dx, '<');
+            moves += string(abs(dy), (dy > 0 ? 'v' : '^'));
         }
     } else if (dy > 0) {
         if (start.second == 0 && target.first == 3) {
-            moves += std::string(dx, '>');
-            moves += std::string(dy, 'v');
+            moves += string(dx, '>');
+            moves += string(dy, 'v');
         } else {
-            moves += std::string(dy, 'v');
-            moves += std::string(dx, '>');
+            moves += string(dy, 'v');
+            moves += string(dx, '>');
         }
     } else {
-        moves += std::string(-dy, '^');
-        moves += std::string(dx, '>');
+        moves += string(-dy, '^');
+        moves += string(dx, '>');
     }
 
     return moves + "A";
@@ -60,24 +60,24 @@ string DirPad::getSequence(const char from, const char to) {
 
     if (dx < 0) {
         if (start.first == 0 && target.second == 0) {
-            moves += std::string(abs(dy), (dy > 0 ? 'v' : '^'));
-            moves += std::string(-dx, '<');
+            moves += string(abs(dy), (dy > 0 ? 'v' : '^'));
+            moves += string(-dx, '<');
         } else {
-            moves += std::string(-dx, '<');
-            moves += std::string(abs(dy), (dy > 0 ? 'v' : '^'));
+            moves += string(-dx, '<');
+            moves += string(abs(dy), (dy > 0 ? 'v' : '^'));
         }
     } else if (dy < 0) {
         if (start.second == 0 && target.first == 0) { // Can't move up, go right first
-            moves += std::string(dx, '>');
-            moves += std::string(-dy, '^');
+            moves += string(dx, '>');
+            moves += string(-dy, '^');
         } else {
-            moves += std::string(-dy, '^');
-            moves += std::string(dx, '>');
+            moves += string(-dy, '^');
+            moves += string(dx, '>');
         }
         
     } else {
-        moves += std::string(dy, 'v');
-        moves += std::string(dx, '>');
+        moves += string(dy, 'v');
+        moves += string(dx, '>');
     }
 
     return moves + "A";
