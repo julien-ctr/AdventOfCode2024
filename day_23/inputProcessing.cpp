@@ -16,39 +16,79 @@ bool startsWithT(const string &str) {
     return !str.empty() && str[0] == 't';
 }
 
-bool isConnectedToAll(const unordered_map<string,vector<string>> &neighbors, const vector<string> &group, const string &computer) {
-    for (const string el : group) {
-        if (find(neighbors.at(computer).begin(), neighbors.at(computer).end(), el) == neighbors.at(computer).end()) {
-            return false;
+vector<string> bronKerbosch(const unordered_map<string, vector<string>> &neighbors, 
+                            unordered_set<string> &R, 
+                            unordered_set<string> &P, 
+                            unordered_set<string> &X) {
+
+    // Base case: If P and X are both empty, we can't extend more
+    if (P.empty() && X.empty()) {
+        return vector<string>(R.begin(), R.end());
+    }
+
+    // Select a pivot node from P ⋃ X (pick the node with the most neighbors in P)
+    string pivot;
+    int maxNeighbors = 0;
+    for (const string &candidate : P) {
+        int count = count_if(neighbors.at(candidate).begin(), neighbors.at(candidate).end(),
+                             [&](const string &neighbor) {return P.count(neighbor);});
+        if (count > maxNeighbors) {
+            maxNeighbors = count;
+            pivot = candidate;
         }
     }
 
-    return true;
+    unordered_set<string> PMinusPivotNeighbors;
+    // Update P based on the pivot
+    for (const string &v : P) {
+        if (find(neighbors.at(v).begin(), neighbors.at(v).end(), pivot) == neighbors.at(v).end()) {
+            PMinusPivotNeighbors.insert(v);  // Remove v from P
+        }
+    }
+
+    vector<string> maxClique;
+
+    // Iterate over all remaining nodes in P
+    for (const string& v : PMinusPivotNeighbors) {
+        unordered_set<string> newR = R;
+        newR.insert(v); // Add v to R (current clique)
+
+        // Create new sets for P and X (P ⋂ N(v) & X ⋂ N(v))
+        unordered_set<string> newP, newX;
+        for (const string &neighbor : neighbors.at(v)) {
+            if (P.count(neighbor)) newP.insert(neighbor);
+            if (X.count(neighbor)) newX.insert(neighbor);
+        }
+
+        // Recursively call Bron-Kerbosch for the new sets
+        vector<string> candidateClique = bronKerbosch(neighbors, newR, newP, newX);
+
+        // If a larger clique is found, update the maxClique
+        if (candidateClique.size() > maxClique.size()) {
+            maxClique = candidateClique;
+        }
+
+        // Move v from P to X
+        P.erase(v);
+        X.insert(v);
+    }
+
+    return maxClique;
 }
 
-vector<string> findMaxExtend(const unordered_map<string,vector<string>> &neighbors, vector<string> &group) {
-    vector<string> oldGroup;
+vector<string> findMaxClique(const unordered_map<string, vector<string>>& neighbors) {
+    unordered_set<string> R, P, X;
+    vector<string> maxClique;
 
-    while (oldGroup != group) {
-        oldGroup = group;
-        
-        unordered_set<string> possibleNeighbours;
-        for (unsigned int i = 0; i < group.size(); ++i) {
-            for (const string &neigh : neighbors.at(group[i])) {
-                if (find(group.begin(), group.end(), neigh) == group.end()) {// If not already in the group
-                    possibleNeighbours.insert(neigh);
-                }
-            }
-        }
-
-        for (const string &candidate : possibleNeighbours) {
-            if (isConnectedToAll(neighbors, group, candidate)) {
-                group.push_back(candidate);
-            }
-        }
+    // Initialize P with all nodes in the graph
+    for (const auto& [key, val] : neighbors) {
+        P.insert(key);
     }
 
-    return group;
+    // Start the Bron-Kerbosch algorithm
+    maxClique = bronKerbosch(neighbors, R, P, X);
+
+    return maxClique;
 }
 
 pair<int64_t, string> countStars(const vector<string> &text) {
@@ -77,8 +117,7 @@ pair<int64_t, string> countStars(const vector<string> &text) {
     }
 
     int gc = 0;
-    vector<string> maxGroup;
-
+   
     for (const auto& group : groups) {
         int count = 0;
         if (startsWithT(group[0])) count++;
@@ -86,18 +125,8 @@ pair<int64_t, string> countStars(const vector<string> &text) {
         if (startsWithT(group[2])) count++;
 
         if (count >= 1) {++gc;}
-
-        if (find(maxGroup.begin(), maxGroup.end(), group[0]) != maxGroup.end() ||
-            find(maxGroup.begin(), maxGroup.end(), group[1]) != maxGroup.end() ||
-            find(maxGroup.begin(), maxGroup.end(), group[2]) != maxGroup.end()) {
-            continue;
-        }
-
-        vector<string> gp = {group[0], group[1], group[2]};
-        vector<string> maxExtend = findMaxExtend(neighbors, gp);
-
-        if (maxExtend.size() > maxGroup.size()) maxGroup = maxExtend;
     }
+    vector<string> maxGroup = findMaxClique(neighbors);
 
     sort(maxGroup.begin(),maxGroup.end());
 
