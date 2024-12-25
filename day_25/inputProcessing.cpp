@@ -50,7 +50,7 @@ pair<int64_t, string> countStars(const vector<string> &text) {
     loadData(text, locks, keys);
 
     int64_t count = 0;
-    for (const auto key : keys) {
+    for (const auto &key : keys) {
         count += count_if(locks.begin(), locks.end(), 
                           [&key](const auto &lock) { return keyFitsLock(key, lock); });
     }
