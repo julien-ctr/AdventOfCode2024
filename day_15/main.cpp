@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(){
-    auto text = loadFile("test.txt");
+    auto text = loadFile("../inputs/day_15.txt");
     
     auto start = chrono::high_resolution_clock::now();
 

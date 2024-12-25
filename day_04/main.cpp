@@ -15,7 +15,7 @@ int main(){
     // countXMAS ~ O(n.m)
     // Total ~ O(n.m)
 
-    auto text = loadFile("input.txt");
+    auto text = loadFile("../inputs/day_04.txt");
 
     auto start = chrono::high_resolution_clock::now();
     pair<int, int> stars = countXMAS(text);

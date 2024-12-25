@@ -17,7 +17,7 @@ int main(){
     // countStars ~ O(m. (k.r + k.log(k) + r)) ~ O(m.k.r.log(k))
     // Total ~ O(m.k.r.log(k))
 
-    auto text = loadFile("input.txt");
+    auto text = loadFile("../inputs/day_05.txt");
     
     auto start = chrono::high_resolution_clock::now();
     unordered_map<int, vector<int>> myMap;

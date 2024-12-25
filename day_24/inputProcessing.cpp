@@ -38,7 +38,7 @@ void loadData(const vector<string> &text, unordered_map<string,int> &values, uno
     }
 }
 
-void solve(unordered_map<string,int> &values, const unordered_map<string, vector<string>> &gates, const string &toSolve, int depth = 0) {
+void solve(unordered_map<string,int> &values, const unordered_map<string, vector<string>> &gates, const string &toSolve, int depth) {
     string leftOperand = gates.at(toSolve)[0];
     string rightOperand = gates.at(toSolve)[1];
 

@@ -14,7 +14,7 @@ int main(){
     // addMultiplications = O(n)
     // Total : O(n.m)
 
-    auto text = loadFile("input.txt");
+    auto text = loadFile("../inputs/day_03.txt");
 
     auto start = chrono::high_resolution_clock::now();
 

@@ -12,7 +12,7 @@ int main(){
     // For a map of size n :
     // loadFile = O(n²)
 
-    auto text = loadFile("input.txt");
+    auto text = loadFile("../inputs/day_06.txt");
     
     auto start = chrono::high_resolution_clock::now();
     

@@ -17,7 +17,7 @@ int main(){
     // countValid2 ~ O(n.k²)
     // Overall : O(n.k²)
 
-    auto text = loadFile("input.txt");
+    auto text = loadFile("../inputs/day_02.txt");
 
     auto start = chrono::high_resolution_clock::now();
 

@@ -16,7 +16,7 @@ int main(){
     // similarityScore = O(n) + O(n) = O(2n)
     // Total : O(5n + 2.n.log(n)) ~ O(n.log(n))
 
-    auto text = loadFile("input.txt");
+    auto text = loadFile("../inputs/day_01.txt");
 
     auto start = chrono::high_resolution_clock::now();
 
